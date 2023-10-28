@@ -1,5 +1,37 @@
-@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+@layer base {
+    span, div, p {
+        @apply text-base;
+    }
+
+    input {
+        @apply w-full border rounded-xl my-2 py-2 px-3;
+    }
+    
+    textarea {
+        @apply w-full border-slate-200 rounded-xl my-2 py-2 px-3;
+    }
+}
+
+
+
+@layer components {
+    .btn {
+      @apply inline-block bg-gray-700 hover:bg-gray-600 text-white py-2 px-5 rounded-xl;
+    }
+    
+    .card {
+        @apply p-5 rounded-xl border;
+      }
+
+    .link {
+        @apply text-blue-500 hover:text-blue-400 underline;
+    }
+  }

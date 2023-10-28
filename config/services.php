@@ -38,6 +38,10 @@ return [
         'include_tenant_info' => true,
     ],
 
+    'chat-gpt' => [
+        'key' => env('CHAT_GPT_KEY'),
+    ],
+
 
 
 ];

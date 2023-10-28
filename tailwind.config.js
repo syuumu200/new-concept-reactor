@@ -10,9 +10,18 @@ module.exports = {
     ],
 
     theme: {
+        fontSize: {
+            sm: '1rem',
+            base: '1.3rem',
+            xl: '1.5rem',
+            '2xl': '1.6rem',
+            '3xl': '2rem',
+            '4xl': '2.5rem',
+            '5xl': '3rem',
+        },
         extend: {
             fontFamily: {
-                sans: ['Nunito'],
+                sans: ['Zen Maru Gothic'],
             },
         },
     },
