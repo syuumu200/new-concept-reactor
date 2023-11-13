@@ -5,8 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Models\{
     User,
-    Project,
-    Suggestion
+    Material
 };
 
 return new class extends Migration
@@ -18,12 +17,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('materials', function (Blueprint $table) {
+        Schema::create('evaluations', function (Blueprint $table) {
             $table->ulid('id')->primary('id');
-            $table->foreignUlid('project_id')->constrained()->cascadeOnDelete();
             $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignUlid('suggestion_id')->constrained()->cascadeOnDelete();
-            $table->text('body');
+            $table->foreignUlid('material_id')->constrained()->cascadeOnDelete();
+            $table->smallInteger('value');
             $table->timestamps();
         });
     }
@@ -35,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('materials');
+        Schema::dropIfExists('evaluations');
     }
 };

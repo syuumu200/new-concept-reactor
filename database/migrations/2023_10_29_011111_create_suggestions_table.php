@@ -3,11 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\{
-    User,
-    Project,
-    Suggestion
-};
 
 return new class extends Migration
 {
@@ -18,13 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('materials', function (Blueprint $table) {
-            $table->ulid('id')->primary('id');
-            $table->foreignUlid('project_id')->constrained()->cascadeOnDelete();
-            $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignUlid('suggestion_id')->constrained()->cascadeOnDelete();
+        Schema::create('suggestions', function (Blueprint $table) {
+            $table->ulid('id');
             $table->text('body');
             $table->timestamps();
+            $table->primary('id');
         });
     }
 
@@ -35,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('materials');
+        Schema::dropIfExists('suggestions');
     }
 };

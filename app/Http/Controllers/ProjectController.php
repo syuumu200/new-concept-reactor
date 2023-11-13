@@ -43,12 +43,28 @@ class ProjectController extends Controller
         $project = new Project;
         $project->user_id = $request->user()->id;
         $project->name = $request->input('name');
-        $project->description = $request->input('description');
+        $project->description = <<<EOD
+<プロジェクト概要>
+{$request->input('description')}
+<プロジェクトでユーザーから集めるもの>
+{$request->input('collectibles')}
+EOD;
+        $project->facilitator = <<<EOD
+<ファシリテーターの名前>
+{$request->input('facilitator.name')}
+<ファシリテーターの一人称>
+{$request->input('facilitator.firstPerson')}
+<ファシリテーターの語尾>
+{$request->input('facilitator.endOfSentence')}
+<ファシリテーターの性格>
+{$request->input('facilitator.character')}
+EOD;
         $project->cross_start = $request->input('cross_start');
-        $project->convergence_start = $request->input('convergence_start');
+        $project->vote_start = $request->input('vote_start');
+        $project->reflection_start = $request->input('reflection_start');
         $project->save();
 
-        return to_route('projects.show',$project);
+        return to_route('projects.show', $project);
     }
 
     /**
@@ -60,8 +76,8 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
 
-        return Inertia::render('Project/Show',[
-            'project' => $project->load('user','materials.user')->loadCount('materials')
+        return Inertia::render('Project/Show', [
+            'project' => $project->load('user', 'materials.user')->loadCount('materials')
         ]);
     }
 

@@ -1,25 +1,28 @@
 <template>
   <AppLayout>
-    <div class="flex flex-col gap-3">
-      <Link as="article" :href="$route('projects.show', project)" class="card" v-for="(project, key) in projects"
+    <div class="grid grid-cols-1 divide-y gap-3">
+      <Link as="article" class="cursor-pointer" :href="$route('projects.show', project)" v-for="(project, key) in projects"
         :key="key">
-      <div class="flex justify-between">
-        <h1>{{ project.name }}</h1>
+      <div class="flex justify-between items-center">
+        <h1 class="font-bold">{{ project.name }}</h1>
         <span>{{ project.user.username }}</span>
       </div>
-      <p>{{ project.description }}</p>
+      <p class="whitespace-pre-line">{{ project.description }}</p>
       </Link>
     </div>
+    <CreateButton :href="$route('projects.create')" />
   </AppLayout>
 </template>
 
 <script>
 import { defineComponent } from "vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
+import CreateButton from "@/Assets/CreateButton.vue";
 
 export default defineComponent({
   components: {
     AppLayout,
+    CreateButton
   },
   props: {
     projects: Array

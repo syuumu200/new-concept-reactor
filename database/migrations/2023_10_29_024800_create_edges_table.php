@@ -18,13 +18,10 @@ return new class extends Migration
             $table->ulid('target');
             $table->foreign('source')->references('id')->on('materials')
                 ->constrained()
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+                ->cascadeOnDelete();
             $table->foreign('target')->references('id')->on('materials')
                 ->constrained()
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
-
+                ->cascadeOnDelete();
             $table->primary(['source', 'target']);
         });
     }

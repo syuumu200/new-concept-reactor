@@ -15,12 +15,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('projects', function (Blueprint $table) {
-            $table->ulid('id');
-            $table->foreignIdFor(User::class)->cascadeOnDelete();
+            $table->ulid('id')->primary('id');
+            $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
             $table->string('name');
-            $table->string('description');
+            $table->text('description');
+            $table->text('facilitator');
             $table->unsignedTinyInteger('cross_start');
-            $table->unsignedTinyInteger('convergence_start');
+            $table->unsignedTinyInteger('vote_start');
+            $table->unsignedTinyInteger('reflection_start');
             $table->timestamps();
         });
     }
