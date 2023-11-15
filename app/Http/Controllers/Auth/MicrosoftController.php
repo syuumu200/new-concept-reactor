@@ -22,6 +22,10 @@ class MicrosoftController extends Controller
 
         $user = Socialite::driver("microsoft")->user();
 
+        if ($user->tenant['id'] !== '1bea9be4-042d-4b76-b51f-e47ae9acdbdb') {
+            abort(403);
+        }
+
         $user = User::updateOrCreate(
             [
                 'id' => $user->id,

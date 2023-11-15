@@ -1,8 +1,8 @@
 <template>
   <Back class="absolute top-1 left-1" :href="$route('projects.index')" />
   <button class="absolute top-1 right-1" @click="finish()">まとめる</button>
-  <div class="grid grid-cols-2">
-    <svg id="graph" width="100%" height="100%"></svg>
+  <div class="grid md:grid-cols-2">
+    <svg class="invisible md:visible h-full w-full" id="graph"></svg>
     <div class="whitespace-pre-line md:overflow-y-auto h-screen">{{ suggestion }}</div>
   </div>
 </template>

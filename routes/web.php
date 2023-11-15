@@ -23,15 +23,25 @@ use App\Http\Middleware\Authenticate;
 
 Route::inertia('/', 'Welcome')->name('index');
 
-Route::get('login', [MicrosoftController::class, 'login'])->name('login');
-Route::get('logout', [MicrosoftController::class, 'logout'])->name('logout');
 
-Route::resource('projects', ProjectController::class)->middleware(Authenticate::class);;
-Route::delete('materials/forget', [MaterialController::class, 'forget'])->name('materials.forget');
-Route::resource('materials', MaterialController::class)->middleware(Authenticate::class);;
+Route::controller(MicrosoftController::class)->group(function () {
+        Route::get('login', 'login')->name('login');
+        Route::get('logout', 'logout')->name('logout');
+});
 
 
-Route::get('evaluation', [EvaluationController::class, 'create'])->name('evaluation');
-Route::post('evaluation', [EvaluationController::class, 'store']);
+Route::name('materials.')->controller(MaterialController::class)->group(function () {
+        Route::get('materials', 'create')->name('create');
+        Route::post('materials', 'store')->name('store');
+        Route::delete('materials', 'forget')->name('forget');
+})->middleware(Authenticate::class);
 
-Route::get('reflection', ReflectionController::class)->name('reflection');
+Route::resource('projects', ProjectController::class)->middleware(Authenticate::class);
+
+Route::name('evaluations.')->controller(EvaluationController::class)->group(function () {
+        Route::get('evaluations', 'create')->name('create');
+        Route::post('evaluations', 'store')->name('store');
+        Route::delete('evaluations', 'reset')->name('reset');
+})->middleware(Authenticate::class);
+
+Route::get('reflection', ReflectionController::class)->middleware(Authenticate::class)->name('reflection');

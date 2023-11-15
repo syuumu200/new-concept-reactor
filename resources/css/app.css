@@ -10,8 +10,8 @@
 
 
 @layer base {
-    span, div, p {
-        @apply text-base;
+    span, div, p, label {
+        @apply text-base text-gray-700;
     }
 
     strong {
@@ -19,11 +19,11 @@
     }
 
     h1 {
-        @apply text-xl my-2;
+        @apply text-xl my-2 font-bold;
     }
 
     h2 {
-        @apply text-lg my-1 border-l-4 pl-2;
+        @apply text-lg font-semibold text-gray-800 my-1 border-l-4 pl-2;
     }
 
     h3 {
@@ -34,12 +34,12 @@
         @apply py-1;
     }
 
-    input {
-        @apply w-full border rounded-xl my-2 py-2 px-3;
+    input,input[type='number'] {
+        @apply w-full border border-gray-200 rounded-xl my-2 py-2 px-3;
     }
 
     textarea {
-        @apply w-full border-slate-200 rounded-xl my-2 py-2 px-3;
+        @apply w-full border-slate-200 rounded-xl rounded-br-none my-2 py-2 px-3;
     }
 }
 
@@ -47,7 +47,7 @@
 
 @layer components {
     .btn {
-        @apply inline-block bg-gray-700 hover:bg-gray-600 text-white py-2 px-5 rounded-xl;
+        @apply inline-block bg-gray-700 hover:bg-gray-600 text-white py-2 px-5 rounded-xl disabled:opacity-60;
     }
 
     .card {

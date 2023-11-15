@@ -23,4 +23,21 @@ class Project extends Model
     {
         return $this->hasMany(Material::class);
     }
+
+    public function users()
+    {
+        return $this->hasManyThrough(
+            User::class,
+            Material::class,
+            'project_id',
+            'id',
+            'id',
+            'user_id'
+        );
+    }
+
+    public function evaluations()
+    {
+        return $this->hasManyThrough(Evaluation::class, Material::class);
+    }
 }

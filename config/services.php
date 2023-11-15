@@ -37,11 +37,8 @@ return [
         'tenant' => 'common',
         'include_tenant_info' => true,
     ],
-
-    'chat-gpt' => [
-        'key' => env('CHAT_GPT_KEY'),
-    ],
-
-
+    'notion' => [
+        'api_token' => env('NOTION_API_TOKEN')
+    ]
 
 ];

@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProjecrCreateRequest;
+use App\Http\Requests\ProjectReqeust;
+use App\Http\Requests\ProjectUpdateReqeust;
 use App\Models\Project;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class ProjectController extends Controller
 {
@@ -38,7 +42,7 @@ class ProjectController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProjecrCreateRequest $request)
     {
         $project = new Project;
         $project->user_id = $request->user()->id;
@@ -54,10 +58,14 @@ EOD;
 {$request->input('facilitator.name')}
 <ファシリテーターの一人称>
 {$request->input('facilitator.firstPerson')}
-<ファシリテーターの語尾>
-{$request->input('facilitator.endOfSentence')}
+<ユーザーを呼ぶときの敬称>
+{$request->input('facilitator.honorificTitle')}
 <ファシリテーターの性格>
 {$request->input('facilitator.character')}
+<ファシリテーターの語尾>
+{$request->input('facilitator.endOfSentence')}
+<ファシリテーターの口癖>
+{$request->input('facilitator.favouritePhrase')}
 EOD;
         $project->cross_start = $request->input('cross_start');
         $project->vote_start = $request->input('vote_start');
@@ -75,9 +83,10 @@ EOD;
      */
     public function show(Project $project)
     {
-
         return Inertia::render('Project/Show', [
-            'project' => $project->load('user', 'materials.user')->loadCount('materials')
+            'project' => $project->load('user', 'materials.user')->loadCount(['materials', 'evaluations', 'users' => function (Builder $query) {
+                $query->select(DB::raw('COUNT(DISTINCT user_id)'));
+            }]),
         ]);
     }
 
@@ -89,7 +98,9 @@ EOD;
      */
     public function edit(Project $project)
     {
-        return Inertia::render('Project/Edit');
+        return Inertia::render('Project/Edit', [
+            'project' => $project
+        ]);
     }
 
     /**
@@ -99,9 +110,16 @@ EOD;
      * @param  \App\Models\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Project $project)
+    public function update(ProjectUpdateReqeust $request, Project $project)
     {
-        //
+        $project->name = $request->input('name');
+        $project->description = $request->input('description');
+        $project->facilitator = $request->input('facilitator');
+        $project->cross_start = $request->input('cross_start');
+        $project->vote_start = $request->input('vote_start');
+        $project->reflection_start = $request->input('reflection_start');
+        $project->save();
+        return to_route('projects.show', $project);
     }
 
     /**
