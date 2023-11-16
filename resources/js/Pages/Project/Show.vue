@@ -5,6 +5,8 @@
       <h1>{{ project.name }}</h1>
       <Link v-if="project.user.id === $page.props.auth.user.id" :href="$route('projects.edit', project)"
         class="material-symbols-outlined">edit_note </Link>
+      <button v-if="project.user.id === $page.props.auth.user.id" class="material-symbols-outlined"
+        @click="destroy()">delete</button>
       <span class="grow text-right">{{ project.user.username }}</span>
     </div>
     <section class="grid md:grid-cols-9 gap-2">
@@ -69,6 +71,11 @@ export default defineComponent({
           onStart: () => this.isLoading = true,
           onFinish: () => this.isLoading = false
         })
+    },
+    destroy: function () {
+      router.delete(this.$route('projects.destroy', this.project), {
+        onBefore: () => confirm('本当に削除していいですか？')
+      })
     }
   }
 });

@@ -130,6 +130,7 @@ EOD;
      */
     public function destroy(Project $project)
     {
-        //
+        Project::destroy($project->id);
+        return to_route('projects.index');
     }
 }
