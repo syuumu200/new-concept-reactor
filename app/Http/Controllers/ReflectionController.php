@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ReflectionCreated;
 use App\Models\Material;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use OpenAI\Laravel\Facades\OpenAI;
@@ -84,7 +86,7 @@ EOD
         })->each(fn ($material) => $propmpts->push($material));
 
         $result = OpenAI::chat()->create([
-            'model' => 'gpt-3.5-turbo-1106',
+            'model' => 'gpt-4-1106-preview',
             'messages' => [
                 [
                     "role" => "system",
@@ -93,8 +95,24 @@ EOD
             ],
         ]);
 
+        $messages = [
+            [
+                "role" => "system",
+                "content" => $propmpts->implode("\n\n")
+            ],
+            [
+                "role" => "assistant",
+                "content" => $result->choices[0]->message->content
+            ]
+        ];
+        ReflectionCreated::dispatch(
+            Auth::user(),
+            $messages,
+            $result->meta()->openai->model
+        );
+
         $suggestion = $result->choices[0]->message->content;
-        
+
         return $suggestion;
     }
 }

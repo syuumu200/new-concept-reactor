@@ -7,7 +7,9 @@ use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 use App\Events\AssistantCreated;
+use App\Events\ReflectionCreated;
 use App\Listeners\AssistantCreatedLog;
+use App\Listeners\ReflectionCreatedLog;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -25,6 +27,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         AssistantCreated::class => [
             AssistantCreatedLog::class
+        ],
+        ReflectionCreated::class => [
+            ReflectionCreatedLog::class
         ]
     ];
 
