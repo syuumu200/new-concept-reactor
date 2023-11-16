@@ -15,7 +15,7 @@
       <section class="flex flex-col gap-3">
         <div v-if="material === null" class="card text-center">
           <p>もし評価を誤ったなどの理由で評価を最初からやり直したい場合は，下記のボタンを押してください。</p>
-          <Link class="link" method="delete" :data="{ project: project }" :href="$route('evaluation.reset')">評価を削除する
+          <Link class="link" method="delete" :data="{ project: project }" :href="$route('evaluations.reset')">評価を削除する
           </Link>
         </div>
         <div
