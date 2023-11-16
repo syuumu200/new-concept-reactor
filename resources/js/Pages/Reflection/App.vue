@@ -1,9 +1,13 @@
 <template>
   <Back class="absolute top-1 left-1" :href="$route('projects.index')" />
-  <button class="absolute top-1 right-1" @click="finish()">まとめる</button>
   <div class="grid md:grid-cols-2">
     <svg class="invisible md:visible h-full w-full" id="graph"></svg>
-    <div class="whitespace-pre-line md:overflow-y-auto h-screen">{{ suggestion }}</div>
+    <div v-if="suggestion" class="whitespace-pre-line md:overflow-y-auto h-screen">{{ suggestion }}</div>
+    <div class="md:mt-20 text-center" v-else>
+      <h1>意見の振り返り</h1>
+      <p>ChatGPTが意見を整理し，考察を行います。文章の生成に時間がかかる場合があります。2分をすぎても出力されない場合は管理者に報告してください。</p>
+      <button class="btn mt-3" @click="finish()" :disabled="isLoading">意見を振り返る</button>
+    </div>
   </div>
 </template>
 
@@ -14,6 +18,11 @@ import { router } from '@inertiajs/vue3'
 
 
 export default {
+  data() {
+    return {
+      isLoading: false
+    }
+  },
   components: {
     Back
   },
@@ -22,7 +31,7 @@ export default {
     edges: Array,
     suggestion: {
       type: String,
-      default: 'Null'
+      default: ''
     }
   },
   mounted: function () {
@@ -46,7 +55,11 @@ export default {
         .render();
     },
     finish: function () {
-      router.reload({ only: ['suggestion'] })
+      router.reload({
+        only: ['suggestion'],
+        onStart: () => this.isLoading = true,
+        onFinish: () => this.isLoading = false
+      })
     }
   }
 }

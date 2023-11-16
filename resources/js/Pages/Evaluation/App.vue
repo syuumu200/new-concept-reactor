@@ -14,13 +14,11 @@
       <p v-else class="text-center">意見の評価を全て終えました。</p>
       <section class="flex flex-col gap-3">
         <div v-if="material === null" class="card text-center">
-          <p>もし評価を誤ったなどの理由で評価を最初からやり直したい場合は，下記のボタンを押してください。</p>
-          <Link class="link" method="delete" :data="{ project: project }" :href="$route('evaluations.reset')">評価を削除する
+          <p>もし評価を後から変更する場合には，下記のボタンを押してください。</p>
+          <Link class="link" method="delete" :data="{ project: project }" :href="$route('evaluations.reset')">評価をやり直す
           </Link>
         </div>
-        <div
-          v-if="Math.round(project.evaluations_count / (project.users_count * project.materials_count) * 100) > project.reflection_start"
-          class="card text-center">
+        <div v-if="project.evaluation_percentage > project.reflection_start" class="card text-center">
           <p>「意見の振り返り」が解禁されました。</p>
           <Link class="link" :data="{ project_id: project.id }" :href="$route('reflection')">意見を振り返る</Link>
         </div>

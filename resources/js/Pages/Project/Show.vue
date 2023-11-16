@@ -9,13 +9,14 @@
     </div>
     <section class="grid md:grid-cols-9 gap-2">
       <div class="md:col-span-2 flex flex-col gap-3">
-        <Link class="btn" as="button" :href="$route('materials.create', { project_id: project.id })">1.
-        意見を登録する</Link>
+        <button class="btn" @click="moveMaterialCreate()" :disabled="isLoading">
+          1. 意見を登録する
+        </button>
         <Link class="btn" as="button" :href="$route('evaluations.create', { project_id: project.id })"
           :disabled="project.vote_start > project.materials_count">2. 意見を評価する
         </Link>
         <Link class="btn" as="button" :href="$route('reflection', { project_id: project.id })"
-          :disabled="project.reflection_start > Math.round(project.evaluations_count / (project.users_count * project.materials_count) * 100)">
+          :disabled="project.reflection_start > project.evaluation_percentage">
         3. 意見を振り返る
         </Link>
       </div>
@@ -34,7 +35,7 @@
         <p>参加ユーザー数　{{ project.users_count }}</p>
         <p>登録された意見　{{ project.materials_count }}</p>
         <p>評価数　{{ project.evaluations_count }}</p>
-        <p>評価率　{{ Math.round(project.evaluations_count / (project.users_count * project.materials_count) * 100) }}%</p>
+        <p>評価率　{{ project.evaluation_percentage }}%</p>
       </div>
     </section>
   </AppLayout>
@@ -44,14 +45,31 @@
 import { defineComponent } from "vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Back from "@/Assets/Back.vue";
+import { router } from '@inertiajs/vue3'
 
 export default defineComponent({
+  data() {
+    return {
+      isLoading: false
+    }
+  },
   components: {
     AppLayout,
     Back
   },
   props: {
     project: Object
+  },
+  methods: {
+    moveMaterialCreate: function () {
+      router.get(this.$route('materials.create'), {
+        project_id: this.project.id
+      },
+        {
+          onStart: () => this.isLoading = true,
+          onFinish: () => this.isLoading = false
+        })
+    }
   }
 });
 </script>

@@ -81,10 +81,10 @@ EOD;
      * @param  \App\Models\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function show(Project $project)
+    public function show($projectId)
     {
         return Inertia::render('Project/Show', [
-            'project' => $project->load('user', 'materials.user')->loadCount(['materials', 'evaluations', 'users' => function (Builder $query) {
+            'project' => Project::where('id', $projectId)->evaluationPercentage()->first()->load('user', 'materials.user')->loadCount(['materials', 'evaluations', 'users' => function (Builder $query) {
                 $query->select(DB::raw('COUNT(DISTINCT user_id)'));
             }]),
         ]);

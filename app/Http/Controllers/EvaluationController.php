@@ -13,7 +13,7 @@ class EvaluationController extends Controller
 {
     public function create(Request $request)
     {
-        $project = Project::withCount(['materials', 'evaluations', 'users' => function (Builder $query) {
+        $project = Project::evaluationPercentage()->withCount(['materials', 'evaluations', 'users' => function (Builder $query) {
             $query->select(DB::raw('COUNT(DISTINCT user_id)'));
         }])->findOrFail($request->input('project_id'));
         $user_id = $request->user()->id;
