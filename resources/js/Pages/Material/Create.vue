@@ -48,7 +48,7 @@
         <p v-else class="animate-bounce text-center">
           送信中
         </p>
-        <div v-if="project.materials_count > project.vote_start" class="card text-center my-5">
+        <div v-if="project.materials_count >= project.vote_start" class="card text-center my-5">
           <p>「意見の評価」フェーズが解禁されました。</p>
           <Link class="link" :href="$route('evaluations.create', { project_id: project.id })">意見を評価する</Link>
         </div>

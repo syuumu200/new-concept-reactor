@@ -18,7 +18,7 @@
           <Link class="link" method="delete" :data="{ project: project }" :href="$route('evaluations.reset')">評価をやり直す
           </Link>
         </div>
-        <div v-if="project.evaluation_percentage > project.reflection_start" class="card text-center">
+        <div v-if="project.evaluation_percentage >= project.reflection_start" class="card text-center">
           <p>「意見の振り返り」が解禁されました。</p>
           <Link class="link" :data="{ project_id: project.id }" :href="$route('reflection')">意見を振り返る</Link>
         </div>
