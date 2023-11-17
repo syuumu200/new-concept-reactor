@@ -1,7 +1,6 @@
 <template>
   <AppLayout>
     <Back label="戻る" :href="$route('projects.show', project.id)" />
-
     <section class="grid grid-cols-1 md:grid-cols-2 gap-2">
       <div>
         <div class="flex justify-between items-center gap-2">
@@ -27,8 +26,9 @@
             <button class="btn" @click.prevent="form.targets.unshift({ body: '', isCommand: false })">入力枠を追加する</button>
           </div>
           <div v-for="(material, key) in form.targets" :key="key">
-            <textarea class="mb-0" placeholder="指示に従って入力してください。" rows="3" v-model="material.body" />
-            <Error :errorKey="`targets.${key}.body`" />
+            <textarea class="mb-0" placeholder="指示に従って入力してください。" rows="3" maxlength="100" v-model="material.body"
+              required />
+            <p v-if="material.error" class="text-red-500">{{ material.error }}</p>
             <div class="flex justify-between items-start">
               <div>
                 <input :id="`checkbox-${key}`" class="h-3 w-3" type="checkbox" v-model="material.isCommand">
@@ -76,7 +76,8 @@ export default defineComponent({
         targets: [
           {
             body: '',
-            isCommand: false
+            isCommand: false,
+            error: ''
           }
         ],
       }),
@@ -129,9 +130,14 @@ export default defineComponent({
       this.form.sources = this.sources
       this.form.post('/materials', {
         onSuccess: function () {
-          this.form.targets = [{ body: '', isCommand: false }]
-          this.showLastMessage()
-        }.bind(this)
+          this.form.targets = [{ body: '', isCommand: false, error: '' }]
+        }.bind(this),
+        onError: function () {
+          this.form.targets.forEach(function (target, index) {
+            target.error = this.$page.props.errors[`targets.${index}.body`] ?? false
+          }.bind(this))
+        }.bind(this),
+        onFinish: () => this.showLastMessage()
       })
     },
   },
