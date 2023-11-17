@@ -24,9 +24,10 @@ class ProjecrCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:20',
+            'name' => 'required|string|max:30',
             'description' => 'required|string|max:800',
-            'collectibles' => 'required|string|max:200',
+            'collectibles' => 'required|string|max:100',
+            'goal' => 'required|string|max:100',
             'facilitator.name' => 'required|string|max:30',
             'facilitator.firstPerson' => 'required|string|max:10',
             'facilitator.honorificTitle' => 'required|string|max:10',

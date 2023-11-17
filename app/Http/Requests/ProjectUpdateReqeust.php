@@ -24,7 +24,7 @@ class ProjectUpdateReqeust extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:20',
+            'name' => 'required|string|max:30',
             'description' => 'required|string|max:1000',
             'facilitator' => 'required|string|max:1000',
             'cross_start' => 'required|integer|min:3|max:255',

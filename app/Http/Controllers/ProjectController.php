@@ -52,6 +52,8 @@ class ProjectController extends Controller
 {$request->input('description')}
 <プロジェクトでユーザーから集めるもの>
 {$request->input('collectibles')}
+<プロジェクトのゴール>
+{$request->input('goal')}
 EOD;
         $project->facilitator = <<<EOD
 <ファシリテーターの名前>

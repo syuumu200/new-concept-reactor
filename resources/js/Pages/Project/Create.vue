@@ -11,6 +11,9 @@
       <label>プロジェクトで集めるもの</label>
       <input class="mb-0" placeholder="プロジェクトで集めるものを入力してください" v-model="form.collectibles" required />
       <Error errorKey="collectibles" />
+      <label>プロジェクトのゴール</label>
+      <input class="mb-0" placeholder="プロジェクトのゴール" v-model="form.goal" required />
+      <Error errorKey="goal" />
       <h2>ファシリテーター</h2>
       <label>名前</label>
       <input class="mb-0" placeholder="ファシリテーターの名前を入力してください" v-model="form.facilitator.name" required />
@@ -62,6 +65,7 @@ export default defineComponent({
         name: '明日のごはんについて考えるプロジェクト',
         description: "明日のごはんを考えるためのプロジェクトです。",
         collectibles: '料理',
+        goal: '明日のごはんを決定する',
         facilitator: {
           name: 'NewConceptReactorファシリテーションAI',
           firstPerson: '私',
