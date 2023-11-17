@@ -9,6 +9,7 @@ use App\Models\{
     User,
     Material
 };
+use Illuminate\Support\Facades\DB;
 
 class Project extends Model
 {
@@ -53,5 +54,12 @@ class Project extends Model
                 ->join('materials', 'materials.id', '=', 'evaluations.material_id')
                 ->whereColumn('materials.project_id', 'projects.id');
         }]);
+    }
+
+    public function scopeDistinctUsersCount($query)
+    {
+        return $query->addSelect(['distinct_users_count' => Material::select(DB::raw('count(distinct user_id)'))
+            ->whereColumn('project_id', 'projects.id')
+        ]);
     }
 }

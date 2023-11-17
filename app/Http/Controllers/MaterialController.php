@@ -17,12 +17,7 @@ class MaterialController extends Controller
 {
     public function create(Request $request)
     {
-        /*
-        $project = Project::withCount(['materials', 'evaluations', 'users' => function (Builder $query) {
-            $query->select(DB::raw('COUNT(DISTINCT user_id)'));
-        }])->findOrFail($request->input('project_id'));
-*/
-        $project = Project::withCount(['materials', 'evaluations'])->evaluationPercentage()->findOrFail($request->input('project_id'));
+        $project = Project::withCount(['materials', 'evaluations'])->distinctUsersCount()->evaluationPercentage()->findOrFail($request->input('project_id'));
 
         $now = now();
 
@@ -65,7 +60,7 @@ $project->facilitator
 ・バグが発生したり，理解できない内容をファシリテーターが出力した場合には，「リセットボタン」を押す事でファシリテーター（AI）の記憶を削除し，最新のデータのみで会話を再開することができます。
 
 【注意事項】
-・本システムでの入力内容は記録され，研究開発に使用する場合があります。
+・本システムでの入力内容は記録され，研究開発に用いられる場合があります。
 
 【ファシリテーターの役割】
 ・New ConceptReactorの意見の集約や発想支援について説明します。
@@ -87,7 +82,7 @@ EOD
         $prompts->push(
             <<<EOD
 【{$now}時点でのプロジェクトの状況】
-参加ユーザー数：$project->users_count
+参加ユーザー数：$project->distinct_users_count
 登録された意見の数：$project->materials_count
 評価率：$project->evaluation_percentage%
 EOD

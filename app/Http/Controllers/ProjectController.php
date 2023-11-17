@@ -84,9 +84,7 @@ EOD;
     public function show($projectId)
     {
         return Inertia::render('Project/Show', [
-            'project' => Project::where('id', $projectId)->evaluationPercentage()->first()->load('user', 'materials.user')->loadCount(['materials', 'evaluations', 'users' => function (Builder $query) {
-                $query->select(DB::raw('COUNT(DISTINCT user_id)'));
-            }]),
+            'project' => Project::where('id', $projectId)->distinctUsersCount()->evaluationPercentage()->first()->load('user')->loadCount(['materials', 'evaluations']),
         ]);
     }
 

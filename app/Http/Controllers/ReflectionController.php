@@ -22,22 +22,25 @@ class ReflectionController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $materials = Material::where('project_id', $request->input('project_id'))->get();
+        $project = Project::distinctUsersCount()
+            ->evaluationPercentage()
+            ->with('materials.sources', 'materials.evaluations', 'user')
+            ->withCount('materials')
+            ->findOrFail($request->input('project_id'));
 
         return Inertia::render('Reflection/App', [
-            'materials' => $materials,
+            'project' => $project,
+            'materials' => $project->materials,
             'edges' => DB::table('edges')
-                ->whereIn('source', $materials->pluck('id')->toArray())
-                ->whereIn('target', $materials->pluck('id')->toArray())
+                ->whereIn('source', $project->materials->pluck('id')->toArray())
+                ->whereIn('target', $project->materials->pluck('id')->toArray())
                 ->get(),
-            'suggestion' => Inertia::lazy(fn () => $this->suggestion($request->input('project_id'), $materials)),
+            'suggestion' => Inertia::lazy(fn () => $this->suggestion($project)),
         ]);
     }
 
-    public function suggestion($project_id, $materials)
+    public function suggestion(Project $project)
     {
-        $project = Project::findOrFail($project_id);
-
         $propmpts = collect();
         $propmpts->push(
             <<<EOD
@@ -53,13 +56,18 @@ class ReflectionController extends Controller
 【ファシリテーター設定】
 {$project->facilitator}
 
+【プロジェクトの状況】
+参加ユーザー数：$project->distinct_users_count
+登録された意見の数：$project->materials_count
+評価率：$project->evaluation_percentage%
+
 【出力の内容】
 1. システムとファシリテーターに関する自己紹介
 2. 最終プロセスである”意見の振り返り”の説明
-3. 意見の一覧または意見を整理したもの
+3. 整理された意見の一覧
 4. 整理された意見に対しての考察
 5. ファシリテーターとしての逆説的な意見
-6. 考察と逆説的な意見に対する結論
+6. 考察と逆説的な意見をふまえた結論
 7. プロジェクト参加者への謝辞
 
 【出力時のルール】
@@ -71,7 +79,7 @@ class ReflectionController extends Controller
 EOD
         );
 
-        $materials->load('sources', 'user')->map(function ($material) {
+        $project->materials->map(function ($material) {
             $fields = Arr::map([
                 '識別子' => $material->id,
                 '発案者' => $material->user->username,

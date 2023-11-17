@@ -1,5 +1,5 @@
 <template>
-  <Back class="absolute top-1 left-1" :href="$route('projects.index')" />
+  <Back class="absolute top-1 left-1" :href="$route('projects.show', project)" />
   <div class="grid md:grid-cols-2">
     <svg class="invisible md:visible h-full w-full" id="graph"></svg>
     <div v-if="suggestion" class="whitespace-pre-line md:overflow-y-auto h-screen">{{ suggestion }}</div>
@@ -27,6 +27,7 @@ export default {
     Back
   },
   props: {
+    project: Object,
     materials: Array,
     edges: Array,
     suggestion: {

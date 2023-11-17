@@ -34,7 +34,7 @@
         <p>評価開始意見数　{{ project.vote_start }}</p>
         <p>振り返り開始評価率　{{ project.reflection_start }}%</p>
         <h2>状況</h2>
-        <p>参加ユーザー数　{{ project.users_count }}</p>
+        <p>参加ユーザー数　{{ project.distinct_users_count }}</p>
         <p>登録された意見　{{ project.materials_count }}</p>
         <p>評価数　{{ project.evaluations_count }}</p>
         <p>評価率　{{ project.evaluation_percentage }}%</p>
