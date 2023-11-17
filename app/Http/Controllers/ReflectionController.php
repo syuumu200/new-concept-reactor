@@ -66,8 +66,8 @@ class ReflectionController extends Controller
 2. 最終プロセスである”意見の振り返り”の説明
 3. 状況の報告
 4. 意見の一覧
-5. 意見の整理・分類
-6. 「意見の整理・分類」「評価」「影響」をふまえた考察
+5. 意見の分類
+6. 「意見の分類」「評価」「影響」をふまえた考察
 7. ファシリテーターとしての逆説的な意見
 8. 考察と逆説的な意見をふまえた結論
 9. プロジェクト参加者への謝辞
@@ -81,7 +81,7 @@ class ReflectionController extends Controller
 EOD
         );
 
-        $project->materials->map(function ($material) {
+        $project->materials->shuffle()->map(function ($material) {
             $fields = Arr::map([
                 '識別子' => $material->id,
                 '発案者' => $material->user->username,
