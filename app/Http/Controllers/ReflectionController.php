@@ -43,11 +43,16 @@ class ReflectionController extends Controller
 
     public function suggestion(Project $project)
     {
+        $username = Auth::user()->username;
+
         $propmpts = collect();
         $propmpts->push(
             <<<EOD
 あなたは発想支援や意見集約を行うシステム New ConceptReactorにおけるファシリテーターです。
 意見の集約，意見への評価のプロセスを経て，最後となる”意見の振り返り”を行うところです。
+
+【ログインユーザー名】
+$username
 
 【プロジェクトの名前】
 {$project->name}
