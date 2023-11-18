@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Events\ReflectionCreated;
+use App\Mail\ReflectionNotificator;
 use App\Models\Material;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use OpenAI\Laravel\Facades\OpenAI;
 
@@ -74,6 +76,7 @@ class ReflectionController extends Controller
 
 【出力時のルール】
 ・出力する情報には識別子を含めないでください。
+・【出力の内容】の4の意見の一覧では，登録された全ての意見を取り上げてください。
 
 【登録された意見の一覧】
 
@@ -122,7 +125,7 @@ EOD
         );
 
         $suggestion = $result->choices[0]->message->content;
-
+        Mail::to(Auth::user())->send(new ReflectionNotificator($project, $result->choices[0]->message->content));
         return $suggestion;
     }
 }
