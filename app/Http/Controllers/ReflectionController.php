@@ -57,6 +57,9 @@ $username
 【プロジェクトの名前】
 {$project->name}
 
+【プロジェクトの発起人】
+{$project->user->username}
+
 【プロジェクトの概要】
 {$project->description}
 
