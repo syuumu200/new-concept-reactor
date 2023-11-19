@@ -43,7 +43,7 @@ class AssistantCreatedLog
 
         $t = collect($event->chat)->map(fn ($mes) => "<{$mes['role']}>\n{$mes['content']}")->implode("\n");
         foreach ($this->mb_str_split($t, 2000) as $message) {
-            $block = Paragraph::create(Str::limit($message,2000));
+            $block = Paragraph::create(Str::limit($message, 2000, '（略）'));
             $notion->block(collect($p)->toArray()['id'])->append($block);
         }
     }
