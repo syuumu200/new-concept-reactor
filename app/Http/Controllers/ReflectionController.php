@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Events\ReflectionCreated;
 use App\Mail\ReflectionNotificator;
-use App\Models\Material;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
