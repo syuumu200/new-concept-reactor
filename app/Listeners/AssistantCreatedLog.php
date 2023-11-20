@@ -41,28 +41,12 @@ class AssistantCreatedLog
 
         $p = $notion->pages()->createInDatabase('8f949ea286e44b7889570575a1a9f61c', $page);
 
-        $t = collect($event->chat)->map(fn ($mes) => "<{$mes['role']}>\n{$mes['content']}")->implode("\n");
-        foreach ($this->mb_str_split($t, 2000) as $message) {
-            $block = Paragraph::create(Str::limit($message, 2000, '（略）'));
+        $text = collect($event->chat)->map(fn ($message) => "<{$message['role']}>\n{$message['content']}")->implode("\n");
+        $chunks = preg_split('/(.{1,2000})/us', $text, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+
+        foreach ($chunks as $chunk) {
+            $block = Paragraph::create($chunk);
             $notion->block(collect($p)->toArray()['id'])->append($block);
         }
-    }
-
-
-    public function mb_str_split(string $sentence, int $length): array
-    {
-        $tmp = $sentence;
-        $chunks = [];
-        while (true) {
-            if (mb_strlen($tmp) <= $length) {
-                $chunks[] = $tmp;
-                break;
-            }
-
-            $chunk = mb_substr($tmp, 0, $length);
-            $tmp = mb_substr($tmp, $length);
-            $chunks[] = $chunk;
-        }
-        return $chunks;
     }
 }

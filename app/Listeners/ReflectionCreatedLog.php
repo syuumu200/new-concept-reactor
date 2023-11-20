@@ -44,28 +44,12 @@ class ReflectionCreatedLog
 
         $p = $notion->pages()->createInDatabase('9c08f9e0407641a4812536251a437dcc', $page);
 
-        $t = collect($event->messages)->map(fn ($mes) => "<{$mes['role']}>\n{$mes['content']}")->implode("\n");
-        foreach ($this->mb_str_split($t, 2000) as $message) {
-            $block = Paragraph::create($message);
+        $text = collect($event->messages)->map(fn ($message) => "<{$message['role']}>\n{$message['content']}")->implode("\n");
+        $chunks = preg_split('/(.{1,2000})/us', $text, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+
+        foreach ($chunks as $chunk) {
+            $block = Paragraph::create($chunk);
             $notion->block(collect($p)->toArray()['id'])->append($block);
         }
-    }
-
-
-    public function mb_str_split(string $sentence, int $length): array
-    {
-        $tmp = $sentence;
-        $chunks = [];
-        while (true) {
-            if (mb_strlen($tmp) <= $length) {
-                $chunks[] = $tmp;
-                break;
-            }
-
-            $chunk = mb_substr($tmp, 0, $length);
-            $tmp = mb_substr($tmp, $length);
-            $chunks[] = $chunk;
-        }
-        return $chunks;
     }
 }
