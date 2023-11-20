@@ -8,6 +8,7 @@ use App\Models\Project;
 use App\Models\Suggestion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
 use OpenAI\Laravel\Facades\OpenAI;
@@ -119,21 +120,27 @@ EOD
 
     public function generateChat($request, $project)
     {
-        $result = OpenAI::chat()->create([
-            'model' => 'gpt-4-1106-preview',
-            'messages' => $request->session()->get("projects.$project->id")
-        ]);
-
-        $request->session()->push("projects.$project->id", [
-            'role' => 'assistant',
-            'content' => $result->choices[0]->message->content
-        ]);
-
-        AssistantCreated::dispatch(
-            $request->user(),
-            $request->session()->get("projects.$project->id"),
-            $result->meta()->openai->model
-        );
+        try {
+            $result = OpenAI::chat()->create([
+                'model' => 'gpt-4-1106-preview',
+                'messages' => $request->session()->get("projects.$project->id")
+            ]);
+            $request->session()->push("projects.$project->id", [
+                'role' => 'assistant',
+                'content' => $result->choices[0]->message->content
+            ]);
+            AssistantCreated::dispatch(
+                $request->user(),
+                $request->session()->get("projects.$project->id"),
+                $result->meta()->openai->model
+            );
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            $request->session()->push("projects.$project->id", [
+                'role' => 'assistant',
+                'content' => "エラーが発生しました。次のエラーを管理者に報告した後に，「リセット」ボタンを押して復旧を試みてください。\n" . $e->getMessage()
+            ]);
+        }
     }
 
     public function store(MaterialCreateRequest $request)
