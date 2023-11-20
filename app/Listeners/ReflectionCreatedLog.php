@@ -3,8 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\ReflectionCreated;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+use Arispati\EmojiRemover\EmojiRemover;
 use FiveamCode\LaravelNotionApi\Notion;
 use FiveamCode\LaravelNotionApi\Entities\Properties\{
     Title,
@@ -12,8 +11,6 @@ use FiveamCode\LaravelNotionApi\Entities\Properties\{
 };
 use FiveamCode\LaravelNotionApi\Entities\Page;
 use FiveamCode\LaravelNotionApi\Entities\Blocks\Paragraph;
-use Illuminate\Support\Str;
-use Illuminate\Support\Arr;
 
 class ReflectionCreatedLog
 {
@@ -45,7 +42,7 @@ class ReflectionCreatedLog
         $p = $notion->pages()->createInDatabase('9c08f9e0407641a4812536251a437dcc', $page);
 
         $text = collect($event->messages)->map(fn ($message) => "<{$message['role']}>\n{$message['content']}")->implode("\n");
-        $chunks = preg_split('/(.{1,2000})/us', $text, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+        $chunks = preg_split('/(.{1,2000})/us', EmojiRemover::filter($text, '<emoji>'), -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
         foreach ($chunks as $chunk) {
             $block = Paragraph::create($chunk);
